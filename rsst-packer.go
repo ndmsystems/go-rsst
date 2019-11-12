@@ -1,7 +1,7 @@
 package rsst
 
 import (
-	rsstApi "github.com/tdx/go/api/rsst"
+	rsstApi "github.com/tdx/go-rsst/api"
 )
 
 // Unpack ...
