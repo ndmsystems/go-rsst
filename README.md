@@ -1,2 +1,4 @@
 # go-rsst
-Read Service StaTus 
+Runtime Service StaTus
+
+TODO: add IDs descriptions

@@ -9,7 +9,7 @@ type svc struct {
 }
 
 // New ...
-func New() rsstApi.Rsst {
+func New() rsstApi.Processor {
 	return &svc{
 		handlers: make(map[uint16]rsstApi.Handler),
 	}
