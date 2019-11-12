@@ -1,7 +1,7 @@
 package rsst
 
 import (
-	rsstApi "github.com/tdx/go/api/rsst"
+	rsstApi "github.com/tdx/go-rsst/api"
 )
 
 type svc struct {
@@ -9,7 +9,7 @@ type svc struct {
 }
 
 // New ...
-func New() rsstApi.Processor {
+func New() rsstApi.Rsst {
 	return &svc{
 		handlers: make(map[uint16]rsstApi.Handler),
 	}

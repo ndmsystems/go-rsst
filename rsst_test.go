@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"testing"
 
-	rsstApi "github.com/tdx/go/api/rsst"
+	rsstApi "github.com/tdx/go-rsst/api"
 )
 
 var (
