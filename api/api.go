@@ -19,6 +19,8 @@ type Registrator interface {
 type Packer interface {
 	Pack([]Info) []byte
 	Unpack([]byte) []Info
+	PackRequest([]Info) []byte
+	UnpackResponse([]byte) []Info
 }
 
 // Rsst ...
