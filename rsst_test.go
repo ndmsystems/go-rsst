@@ -27,12 +27,20 @@ var (
 		{ID: 0x4000, Data: []byte("0.306"), Ok: true},
 		{ID: 0x4004, Data: []byte("NDNS"), Ok: true},
 	}
+	bad = []byte{200, 153, 128, 45, 191, 148, 6, 91}
 )
 
 func TestPack(t *testing.T) {
 	buf := Pack(infos)
 	if !bytes.Equal(buf, output) {
 		t.Fatalf("exprected buf=%v, got %v", output, buf)
+	}
+}
+
+func TestBad(t *testing.T) {
+	infos := Unpack(bad)
+	if len(infos) != 0 {
+		t.Fatalf("expected empty Infos from bad input, got: %#v", infos)
 	}
 }
 

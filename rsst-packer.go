@@ -6,7 +6,8 @@ import (
 
 // Unpack request
 func Unpack(buf []byte) []rsstApi.Info {
-	if len(buf) == 0 {
+	bufLen := len(buf)
+	if bufLen == 0 {
 		return nil
 	}
 
@@ -16,11 +17,19 @@ func Unpack(buf []byte) []rsstApi.Info {
 		n = len(buf)
 	)
 	for n > 0 {
-		info := rsstApi.Info{
-			ID: uint16(buf[i])<<8 + uint16(buf[i+1]),
-		}
+
+		id := uint16(buf[i])<<8 + uint16(buf[i+1])
 		i += 2
 		n -= 2
+
+		if id < 0x1000 || id > 0x7999 {
+			return infos
+		}
+
+		info := rsstApi.Info{
+			ID: id,
+		}
+
 		// contains zero terminated string parameter
 		if info.ID < 0x2000 {
 			if buf[i] == 0 {
@@ -33,6 +42,9 @@ func Unpack(buf []byte) []rsstApi.Info {
 			}
 			i++
 			n--
+			if i >= bufLen {
+				return infos
+			}
 		}
 		infos = append(infos, info)
 	}
@@ -76,7 +88,8 @@ func Pack(infos []rsstApi.Info) []byte {
 
 // UnpackResponse ...
 func UnpackResponse(buf []byte) []rsstApi.Info {
-	if len(buf) == 0 {
+	bufLen := len(buf)
+	if bufLen == 0 {
 		return nil
 	}
 
@@ -86,11 +99,18 @@ func UnpackResponse(buf []byte) []rsstApi.Info {
 		n = len(buf)
 	)
 	for n > 0 {
-		info := rsstApi.Info{
-			ID: uint16(buf[i])<<8 + uint16(buf[i+1]),
-		}
+		id := uint16(buf[i])<<8 + uint16(buf[i+1])
 		i += 2
 		n -= 2
+
+		if id < 0x1000 || id > 0x7999 {
+			return infos
+		}
+
+		info := rsstApi.Info{
+			ID: id,
+		}
+
 		// contains zero terminated string parameter
 		if info.ID >= 0x4000 {
 			if buf[i] == 0 {
@@ -100,6 +120,9 @@ func UnpackResponse(buf []byte) []rsstApi.Info {
 				info.Data = append(info.Data, buf[i])
 				i++
 				n--
+				if i >= bufLen {
+					return infos
+				}
 			}
 			i++
 			n--
