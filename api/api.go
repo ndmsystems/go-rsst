@@ -17,8 +17,8 @@ type Registrator interface {
 
 // Packer ...
 type Packer interface {
-	Pack([]Info) []byte
-	Unpack([]byte) []Info
+	PackResponse([]Info) []byte
+	UnpackRequest([]byte) []Info
 	PackRequest([]Info) []byte
 	UnpackResponse([]byte) []Info
 }

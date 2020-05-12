@@ -4,8 +4,8 @@ import (
 	rsstApi "github.com/tdx/go-rsst/api"
 )
 
-// Unpack request
-func Unpack(buf []byte) []rsstApi.Info {
+// UnpackRequest ...
+func UnpackRequest(buf []byte) []rsstApi.Info {
 	bufLen := len(buf)
 	if bufLen == 0 {
 		return nil
@@ -32,28 +32,40 @@ func Unpack(buf []byte) []rsstApi.Info {
 
 		// contains zero terminated string parameter
 		if info.ID < 0x2000 {
-			if buf[i] == 0 {
+			if buf[i] == 0 { // zero string ?
+				info.Ok = true
+				infos = append(infos, info)
+				i++
+				n--
 				continue
 			}
 			for buf[i] != 0 {
 				info.Data = append(info.Data, buf[i])
 				i++
 				n--
+				if i >= bufLen {
+					return infos
+				}
 			}
 			i++
 			n--
-			if i >= bufLen {
-				return infos
-			}
+			info.Ok = true
+			infos = append(infos, info)
+			continue
 		}
+
+		// > 0x19999
+		// no data
+		info.Ok = true
+
 		infos = append(infos, info)
 	}
 
 	return infos
 }
 
-// Pack response
-func Pack(infos []rsstApi.Info) []byte {
+// PackResponse ...
+func PackResponse(infos []rsstApi.Info) []byte {
 	if len(infos) == 0 {
 		return nil
 	}
@@ -113,9 +125,14 @@ func UnpackResponse(buf []byte) []rsstApi.Info {
 
 		// contains zero terminated string parameter
 		if info.ID >= 0x4000 {
-			if buf[i] == 0 {
+			if buf[i] == 0 { // zero string ?
+				info.Ok = true
+				infos = append(infos, info)
+				i++
+				n--
 				continue
 			}
+
 			for buf[i] != 0 {
 				info.Data = append(info.Data, buf[i])
 				i++
@@ -126,7 +143,20 @@ func UnpackResponse(buf []byte) []rsstApi.Info {
 			}
 			i++
 			n--
+			info.Ok = true
+			infos = append(infos, info)
+			continue
 		}
+
+		// < 0x4000
+		if len(buf[i:]) < 2 {
+			return infos
+		}
+		info.Data = append(info.Data, buf[i], buf[i+1])
+		info.Ok = true
+		i += 2
+		n -= 2
+
 		infos = append(infos, info)
 	}
 
