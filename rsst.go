@@ -20,9 +20,11 @@ func (s *svc) AddHandler(id uint16, f rsstApi.Handler) {
 }
 
 func (s *svc) Process(in []rsstApi.Info) {
-	for _, info := range in {
+	for i := range in {
+		info := in[i]
 		if fn, ok := s.handlers[info.ID]; ok {
 			fn(&info)
+			in[i] = info
 		}
 	}
 }
