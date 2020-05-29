@@ -75,22 +75,55 @@ func PackResponse(infos []rsstApi.Info) []byte {
 		if !infos[i].Ok {
 			continue
 		}
+
+		// check data len
+		if infos[i].ID < 0x2000 && len(infos[i].Data) != 0 {
+			continue
+		}
+		if infos[i].ID >= 0x2000 && infos[i].ID < 0x4000 &&
+			len(infos[i].Data) != 2 {
+
+			continue
+		}
+
+		// id
 		n += 2
+
+		// data len
 		n += len(infos[i].Data)
+
 		if infos[i].ID >= 0x4000 {
+			// trailing zero byte
 			n++
 		}
 	}
 
 	buf := make([]byte, 0, n)
-	for _, info := range infos {
+
+	for i := range infos {
+		info := infos[i]
+
 		if !info.Ok {
 			continue
 		}
+
+		// check data len
+		if info.ID < 0x2000 && len(info.Data) != 0 {
+			continue
+		}
+		if info.ID >= 0x2000 && info.ID < 0x4000 && len(info.Data) != 2 {
+			continue
+		}
+
+		// store ID
 		buf = append(buf, byte(info.ID>>8))
 		buf = append(buf, byte(info.ID&0xff))
+
+		// data
 		buf = append(buf, info.Data...)
+
 		if info.ID >= 0x4000 {
+			// trailing zero byte
 			buf = append(buf, 0)
 		}
 	}

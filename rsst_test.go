@@ -71,6 +71,12 @@ var (
 		0x40, 4,
 		0x40, 5,
 	}
+	// 0x1xxx test
+	d1101 = []rsstApi.Info{
+		{ID: 4353,
+			Data: []byte{110, 100, 110, 115, 47, 114, 101, 109, 111, 116, 101,
+				73, 110, 102, 111, 32, 109, 101, 116, 104, 111, 100}, Ok: true},
+	}
 )
 
 func TestPack(t *testing.T) {
@@ -175,4 +181,11 @@ func TestUnpack(t *testing.T) {
 		}
 	}
 
+}
+
+func Test1xxxPack(t *testing.T) {
+	data := PackResponse(d1101)
+	if len(data) != 0 {
+		t.Fatalf("expected bad 0x1xxx response is skiped, got: %v", data)
+	}
 }
