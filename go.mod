@@ -1,5 +1,5 @@
 module github.com/tdx/go-rsst
 
-go 1.13
+go 1.15
 
-require github.com/tdx/go v0.3.5
+require github.com/stretchr/testify v1.7.0

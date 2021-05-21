@@ -1,6 +1,8 @@
 package rsst
 
 import (
+	"fmt"
+
 	rsstApi "github.com/tdx/go-rsst/api"
 )
 
@@ -143,10 +145,12 @@ func UnpackResponse(buf []byte) []rsstApi.Info {
 		i = 0
 		n = len(buf)
 	)
-	for n > 0 {
+	for n > 1 {
 		id := uint16(buf[i])<<8 + uint16(buf[i+1])
 		i += 2
 		n -= 2
+
+		fmt.Printf("%x: i=%d n=%d\n", id, i, n)
 
 		if id < 0x1000 || id > 0x7999 {
 			return infos
@@ -154,6 +158,13 @@ func UnpackResponse(buf []byte) []rsstApi.Info {
 
 		info := rsstApi.Info{
 			ID: id,
+		}
+
+		if id < 0x2000 {
+			// only id
+			info.Ok = true
+			infos = append(infos, info)
+			continue
 		}
 
 		// contains zero terminated string parameter
