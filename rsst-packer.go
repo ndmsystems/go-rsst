@@ -1,8 +1,6 @@
 package rsst
 
 import (
-	"fmt"
-
 	rsstApi "github.com/tdx/go-rsst/api"
 )
 
@@ -150,7 +148,7 @@ func UnpackResponse(buf []byte) []rsstApi.Info {
 		i += 2
 		n -= 2
 
-		fmt.Printf("%x: i=%d n=%d\n", id, i, n)
+		// fmt.Printf("%x: i=%d n=%d\n", id, i, n)
 
 		if id < 0x1000 || id > 0x7999 {
 			return infos
