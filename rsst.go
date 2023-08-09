@@ -1,7 +1,7 @@
 package rsst
 
 import (
-	rsstApi "github.com/tdx/go-rsst/api"
+	rsstApi "github.com/ndmsystems/go-rsst/api"
 )
 
 type svc struct {

@@ -4,8 +4,8 @@ import (
 	"bytes"
 	"testing"
 
+	rsstApi "github.com/ndmsystems/go-rsst/api"
 	"github.com/stretchr/testify/require"
-	rsstApi "github.com/tdx/go-rsst/api"
 )
 
 var (

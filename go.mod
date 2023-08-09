@@ -1,4 +1,4 @@
-module github.com/tdx/go-rsst
+module github.com/ndmsystems/go-rsst
 
 go 1.15
 
