@@ -206,3 +206,42 @@ func Test1xxxPack(t *testing.T) {
 		t.Fatalf("expected bad 0x1xxx response is skiped, got: %v", data)
 	}
 }
+
+func Test_authorizeRequest(t *testing.T) {
+	type args struct {
+		authLevel rsstApi.AuthorizeLevel
+		id        uint16
+	}
+	tests := []struct {
+		name string
+		args args
+		want bool
+	}{{name: testing.CoverMode(), args: args{
+		authLevel: rsstApi.NDSSTrust,
+		id:        0x1000,
+	}, want: true},
+		{name: testing.CoverMode(), args: args{
+			authLevel: rsstApi.TokenTrust,
+			id:        0x1000,
+		}, want: true},
+		{name: testing.CoverMode(), args: args{
+			authLevel: rsstApi.NDSSTrust,
+			id:        0x2023,
+		}, want: true},
+		{name: testing.CoverMode(), args: args{
+			authLevel: rsstApi.NDSSTrust,
+			id:        0x3020,
+		}, want: false},
+		{name: testing.CoverMode(), args: args{
+			authLevel: rsstApi.TokenTrust,
+			id:        0x3023,
+		}, want: true},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := authorizeRequest(tt.args.authLevel, tt.args.id); got != tt.want {
+				t.Errorf("authorizeRequest() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

@@ -1,5 +1,12 @@
 package api
 
+type AuthorizeLevel int
+
+const (
+	NDSSTrust AuthorizeLevel = iota
+	TokenTrust
+)
+
 // Info ...
 type Info struct {
 	ID   uint16
@@ -26,5 +33,5 @@ type Packer interface {
 // Rsst ...
 type Rsst interface {
 	Registrator
-	Process([]Info)
+	Process(AuthorizeLevel, []Info)
 }
